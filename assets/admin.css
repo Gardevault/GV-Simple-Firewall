@@ -1,4 +1,4 @@
-/* GV Simple Firewall — Advanced Admin UI (Gardevault) */
+/* GV Simple Firewall — Advanced Admin UI */
 
 :root{
   --gv-bg:#0b1220;
@@ -22,11 +22,12 @@
   border-radius:16px;
   position:relative;
   overflow:hidden;
+    box-shadow: 3px 4px 12px 5px #0000005c;
 }
 
 /* header + chips */
 .gvfw-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.gvfw-h1{font-size:1.75rem;font-weight:800;color:var(--gv-accent);margin:0}
+.gvfw-h1{font-size:1.75rem;font-weight:800;color:white; text-shadow:0 0 8px rgba(0,0,0,.6)}
 .gvfw-chips{display:flex;gap:8px;flex-wrap:wrap}
 .gvfw-chip{background:rgba(14,165,233,.08);border:1px solid var(--gv-border);color:var(--gv-text);padding:4px 10px;border-radius:999px;font-size:.85rem}
 .gvfw-chip.is-on{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.35)}
@@ -49,7 +50,7 @@
 .gvfw-card:hover{transform:translateY(-1px);border-color:var(--gv-accent);box-shadow:0 6px 20px rgba(14,165,233,.18), inset 0 0 0 1px rgba(255,255,255,.05)}
 .gvfw-card h2{
   font-size:.95rem;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--gv-accent);margin:0 0 12px;border-bottom:1px dashed var(--gv-border);padding-bottom:6px
+  color: white;margin:0 0 12px;border-bottom:1px dashed var(--gv-border);padding-bottom:6px
 }
 
 /* grids */
@@ -109,10 +110,14 @@
   background:linear-gradient(180deg, var(--gv-accent), var(--gv-accent-2));
   border-color:transparent;box-shadow:0 0 0 3px var(--gv-accent-soft);
 }
-.gvfw-check input[type="checkbox"]:checked::after{transform:translateX(22px);background:#082a3a}
+.gvfw-check input[type="checkbox"]:checked::after{transform:translateX(22px);background:#082a3a; }
 .gvfw-check span{font-weight:600}
 
-/* inputs */
+input[type=checkbox]:checked::before {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(31%) saturate(1%) hue-rotate(228deg) brightness(101%) contrast(101%);
+}
+
+
 input[type="number"],input[type="text"]{
   background:linear-gradient(180deg,#0b1321,#0a1020);color:var(--gv-text);
   border:1px solid var(--gv-border);border-radius:12px;padding:8px 10px;width:100%;
