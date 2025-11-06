@@ -1,0 +1,334 @@
+/* GV Simple Firewall — Advanced Admin UI (Gardevault) */
+
+:root{
+  --gv-bg:#0b1220;
+  --gv-surface:#162132;
+  --gv-surface-2:#1e2a3d;
+  --gv-text:#e2e8f0;
+  --gv-muted:#94a3b8;
+  --gv-accent:#0ea5e9;
+  --gv-accent-2:#38bdf8;
+  --gv-accent-soft:rgba(56,189,248,.18);
+  --gv-border:#2b3b52;
+  --gv-radius:12px;
+  --gv-font:"Inter","Segoe UI",system-ui,sans-serif;
+}
+
+.gvfw-wrap{
+  background:linear-gradient(180deg, rgba(2,6,23,.6), rgba(2,6,23,0)) , var(--gv-bg);
+  color:var(--gv-text);
+  font-family:var(--gv-font);
+  padding:20px 22px 28px;
+  border-radius:16px;
+  position:relative;
+  overflow:hidden;
+}
+
+/* header + chips */
+.gvfw-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.gvfw-h1{font-size:1.75rem;font-weight:800;color:var(--gv-accent);margin:0}
+.gvfw-chips{display:flex;gap:8px;flex-wrap:wrap}
+.gvfw-chip{background:rgba(14,165,233,.08);border:1px solid var(--gv-border);color:var(--gv-text);padding:4px 10px;border-radius:999px;font-size:.85rem}
+.gvfw-chip.is-on{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.35)}
+.gvfw-chip.is-off{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.35)}
+.gvfw-chip.mute{opacity:.75}
+
+/* layout */
+.gvfw-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);gap:18px}
+@media (max-width:1024px){.gvfw-grid{grid-template-columns:1fr}}
+
+.gvfw-card{
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)) , var(--gv-surface);
+  border:1px solid var(--gv-border);
+  border-radius:var(--gv-radius);
+  padding:18px 18px;
+  box-shadow:0 4px 14px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.03);
+  transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  margin-bottom: 5px;
+}
+.gvfw-card:hover{transform:translateY(-1px);border-color:var(--gv-accent);box-shadow:0 6px 20px rgba(14,165,233,.18), inset 0 0 0 1px rgba(255,255,255,.05)}
+.gvfw-card h2{
+  font-size:.95rem;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--gv-accent);margin:0 0 12px;border-bottom:1px dashed var(--gv-border);padding-bottom:6px
+}
+
+/* grids */
+.gvfw-fields{display:grid;gap:10px}
+
+/* ## FIX ##
+ * This is the "CSS 2.0" fix you asked for.
+ *
+ * THE PROBLEM:
+ * .gvfw-4col was set to 4 columns on wide screens, which looked bad.
+ * .gvfw-2col was set to 2 columns.
+ * They had separate, clunky media queries.
+ *
+ * THE SOLUTION:
+ * 1. I grouped .gvfw-2col and .gvfw-4col together.
+ * 2. I made BOTH default to 2 columns, which fixes your "Rate Limits" layout.
+ * 3. I removed the old .gvfw-4col and its (max-width: 1280px) query.
+ * 4. I consolidated the mobile-stacking logic into one (max-width: 760px)
+ * query that now applies to BOTH classes.
+ *
+ * This is cleaner, more modern, and fixes your issue.
+*/
+.gvfw-2col,
+.gvfw-4col {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+}
+
+/* This one media query now handles stacking for both layouts */
+@media (max-width:760px) {
+    .gvfw-2col,
+    .gvfw-4col {
+        grid-template-columns:1fr;
+    }
+}
+/* ## END FIX ## */
+
+
+/* rows */
+.gvfw-row{display:flex;align-items:center;gap:10px;min-height:42px}
+.gvfw-row .gvfw-l{flex:0 0 170px;color:var(--gv-muted);font-weight:600}
+
+/* switch-style checkboxes (no JS) */
+.gvfw-check{gap:12px}
+.gvfw-check input[type="checkbox"]{
+  appearance:none;-webkit-appearance:none;outline:none;cursor:pointer;
+  width:50px;height:28px;border-radius:999px;position:relative;
+  background:#0a1524;border:1px solid var(--gv-border);box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
+  transition:background .2s ease,border-color .2s ease, box-shadow .2s ease;
+}
+.gvfw-check input[type="checkbox"]::after{
+  content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;
+  background:linear-gradient(180deg,#0b2039,#091627);
+  box-shadow:0 2px 6px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.05);
+  transition:transform .2s ease, background .2s ease;
+}
+.gvfw-check input[type="checkbox"]:checked{
+  background:linear-gradient(180deg, var(--gv-accent), var(--gv-accent-2));
+  border-color:transparent;box-shadow:0 0 0 3px var(--gv-accent-soft);
+}
+.gvfw-check input[type="checkbox"]:checked::after{transform:translateX(22px);background:#082a3a}
+.gvfw-check span{font-weight:600}
+
+/* inputs */
+input[type="number"],input[type="text"]{
+  background:linear-gradient(180deg,#0b1321,#0a1020);color:var(--gv-text);
+  border:1px solid var(--gv-border);border-radius:12px;padding:8px 10px;width:100%;
+  transition:border-color .2s ease, box-shadow .2s ease, transform .05s ease;
+}
+input[type="number"]:focus,input[type="text"]:focus{
+  border-color:var(--gv-accent);box-shadow:0 0 0 3px var(--gv-accent-soft);outline:none
+}
+input.small-text{max-width:90px;text-align:center}
+
+/* buttons */
+.button-primary,.button-secondary{border-radius:12px;font-weight:700;transition:transform .05s ease, box-shadow .2s ease}
+.button-primary{background:var(--gv-accent);border:none;color:#fff !important}
+.button-primary:hover{background:var(--gv-accent-2);box-shadow:0 0 0 4px var(--gv-accent-soft)}
+.button-primary:active{transform:translateY(1px)}
+.button-secondary{background:#0c1626!important;border:1px solid var(--gv-border);color:var(--gv-text) !important}
+.button-secondary:hover{border-color:var(--gv-accent);color:var(--gv-accent) !important}
+
+/* sticky save bar */
+.gvfw-sticky{
+  position:sticky;bottom:0;margin-top:14px;padding:10px 12px;
+  background:linear-gradient(180deg, rgba(2,6,23,0), rgba(2,6,23,.9));
+  border-top:1px solid var(--gv-border);backdrop-filter:blur(6px);
+  display:flex;justify-content:flex-end
+}
+
+/* compact services drawer instead of big ad */
+.gvfw-mini{padding:10px 12px}
+.gvfw-drawer{border-radius:10px}
+.gvfw-drawer > summary{
+  list-style:none;cursor:pointer;padding:10px 12px;border:1px solid var(--gv-border);
+  background:var(--gv-surface-2);border-radius:10px;font-weight:700;user-select:none;
+  color:var(--gv-text)
+}
+.gvfw-drawer > summary::-webkit-details-marker{display:none}
+.gvfw-sum-title{color:var(--gv-accent)}
+.gvfw-drawer[open] > summary{border-color:var(--gv-accent)}
+.gvfw-drawer-body{padding:12px 6px 6px}
+.gvfw-logo{display:block;margin:2px auto 10px;width:84px;height:auto;filter:drop-shadow(0 0 6px var(--gv-accent-soft))}
+.gvfw-links{list-style:none;margin:8px 0 10px;padding:0}
+.gvfw-links li{margin:6px 0}
+.gvfw-links a{color:var(--gv-accent);text-decoration:none}
+.gvfw-links a:hover{color:var(--gv-accent-2)}
+.gvfw-wide{display:block;width:100%;text-align:center}
+
+/* footer toolbar */
+.gvfw-toolbar{
+  margin-top:16px;padding:10px 12px;border:1px solid var(--gv-border);border-radius:10px;
+  background:var(--gv-surface);display:flex;gap:12px;align-items:center;justify-content:flex-end
+}
+.gvfw-toolbar a{color:var(--gv-accent);text-decoration:none}
+.gvfw-toolbar a:hover{color:var(--gv-accent-2)}
+
+/* descriptions */
+.description{color:var(--gv-muted);font-size:.9em}
+
+/* focus */
+.gvfw-wrap :focus-visible{outline:none;box-shadow:0 0 0 3px var(--gv-accent-soft)}
+
+/* This adds a consistent gap to your sidebar content */
+.gvfw-grid > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 18px; /* Matches your main grid gap */
+}
+
+
+/* --- Recent blocks table --- */
+/* --- Fixed recent log overflow --- */
+.gvfw-logtable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+  table-layout: fixed;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+}
+
+.gvfw-logrow {
+  background: #0b1220;
+  border: 1px solid var(--gv-border);
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+  word-break: break-all;
+}
+
+.gvfw-logrow td {
+  padding: 8px 10px;
+  vertical-align: top;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gvfw-logtime   { width: 60px;  color: #9fb0c8; }
+.gvfw-logip     { width: 100px; font-weight: 700; }
+.gvfw-loguri    { width: 180px; color: var(--gv-text); }
+.gvfw-logua     { width: 200px; color: #9fb0c8; }
+
+.gvfw-logtable-wrapper {
+  overflow-x: auto;
+  max-width: 100%;
+  border-radius: 8px;
+  padding-bottom: 4px;
+}
+
+/* badges */
+.gvfw-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: .02em;
+  vertical-align: middle;
+}
+.gvfw-badge.block {
+  background: rgba(239,68,68,.15);
+  border: 1px solid rgba(239,68,68,.35);
+  color: #fecaca;
+}
+.gvfw-badge.warn {
+  background: rgba(234,179,8,.12);
+  border: 1px solid rgba(234,179,8,.35);
+  color: #fde68a;
+}
+
+/* scroll fix on mobile */
+@media (max-width: 1024px) {
+  .gvfw-logtable-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .gvfw-logua {
+    display: none;
+  }
+}
+
+/* columns */
+.gvfw-logtime{white-space:nowrap;color:#9fb0c8;min-width:52px}
+.gvfw-logip{white-space:nowrap;font-weight:700;min-width:104px}
+.gvfw-loguri{
+  max-width:360px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.gvfw-logua{
+  color:#9fb0c8; max-width:420px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+
+/* status badge */
+.gvfw-badge{
+  display:inline-block;
+  padding:2px 8px;
+  border-radius:999px;
+  font-weight:800;
+  font-size:11px;
+  letter-spacing:.02em;
+}
+.gvfw-badge.block{
+  background:rgba(239,68,68,.15);
+  border:1px solid rgba(239,68,68,.35);
+  color:#fecaca;
+}
+.gvfw-badge.warn{
+  background:rgba(234,179,8,.12);
+  border:1px solid rgba(234,179,8,.35);
+  color:#fde68a;
+}
+.gvfw-code{opacity:.8}
+
+/* actions under table */
+.gvfw-log-actions{
+  display:flex; gap:8px; justify-content:flex-end; margin-top:8px;
+}
+
+/* small screens */
+@media (max-width: 820px){
+  .gvfw-loguri{max-width:220px}
+  .gvfw-logua{display:none}
+}
+
+
+/* === GVFW Logs Tables === */
+.gvfw-logtable-wrapper{max-width:100%;overflow-x:auto;border-radius:8px;padding-bottom:4px}
+.gvfw-logtable{width:100%;border-collapse:separate;border-spacing:0 6px;table-layout:fixed;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px}
+.gvfw-logrow{background:#0b1220;border:1px solid var(--gv-border);border-radius:10px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)}
+.gvfw-logrow td{padding:8px 10px;vertical-align:top;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gvfw-logtime{width:64px;color:#9fb0c8}
+.gvfw-logip{width:110px;font-weight:700}
+.gvfw-logreason{width:160px}
+.gvfw-loguri{width:220px}
+.gvfw-logua{width:280px;color:#9fb0c8}
+.gvfw-badge{display:inline-block;padding:2px 8px;border-radius:999px;font-weight:700;font-size:11px;letter-spacing:.02em}
+.gvfw-badge.block{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.35);color:#fecaca}
+.gvfw-badge.warn{background:rgba(234,179,8,.12);border:1px solid rgba(234,179,8,.35);color:#fde68a}
+.gvfw-code{opacity:.8}
+.gvfw-log-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+
+@media (max-width:1024px){
+  .gvfw-logua{display:none}
+  .gvfw-loguri{width:auto}
+}
+
+/* === GVFW Login Table === */
+.gvfw-logins-wrapper{max-width:100%;overflow-x:auto;padding-bottom:4px}
+.gvfw-logins{width:100%;border-collapse:separate;border-spacing:0 6px;table-layout:fixed;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px}
+.gvfw-loginrow{background:#0b1220;border:1px solid var(--gv-border);border-radius:10px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)}
+.gvfw-loginrow td{padding:8px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gvfw-login-time{width:64px}
+.gvfw-login-user{width:120px}
+.gvfw-login-ip{width:110px}
+.gvfw-login-reason{width:160px}
+.gvfw-ok{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);color:#bbf7d0}
+.gvfw-fail{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.35);color:#fecaca}
+.gvfw-badge2{display:inline-block;padding:2px 8px;border-radius:999px;font-weight:700;font-size:11px}
+@media (max-width:1024px){.gvfw-loginua{display:none}}
