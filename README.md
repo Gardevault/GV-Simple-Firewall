@@ -11,6 +11,7 @@ This plugin is designed to be a simple, "set it and forget it" security baseline
 *The main firewall dashboard, showing settings, recent blocks, and recent logins.*
 
 ####Features
+
 Modern Admin UI: A clean, dark-mode-first interface. No more boring settings tables.
 
 NEW - Login Logging: Optionally log all successful and failed login attempts, including the username, to easily monitor access.
@@ -30,6 +31,7 @@ Secure File Logging: Logs all blocked events to a protected directory within wp-
 Optional HTTPS Enforcement: Can force SSL for wp-login.php and the /wp-admin/ area.
 
 ####Installation
+
 Download the latest .zip file from the Releases page.
 
 In your WordPress admin, go to Plugins > Add New.
